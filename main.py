@@ -25,15 +25,14 @@ turtle.shape(image)
 data = pd.read_csv("states.csv")
 states_list = data["State"].to_list()
 guessed_states = []
-missed_states = []
 
 while len(guessed_states) > 50:
     query = turtle.textinput(f"{len(guessed_states)}/50 States Correct", "Guess The Name Of A State: ").title()
     
     if query == 'Exit':
-        for state in states_list:
-            if state not in guessed_states:
-                missed_states.append(state)
+        missed_states = [state for state in states_list if state not in guessed_states]
+        missed_states_list = pd.DataFrame(missed_states, columns=["State"])
+        missed_states_list.to_csv("missed_states.csv")
         break
 
     # Checking the answer
@@ -44,7 +43,5 @@ while len(guessed_states) > 50:
         writer.write(query, font=("Verdana", 10, "normal"))
 
 
-missed_states_list = pd.DataFrame(missed_states, columns=["State"])
-missed_states_list.to_csv("missed_states.csv")
 
 s.mainloop()
